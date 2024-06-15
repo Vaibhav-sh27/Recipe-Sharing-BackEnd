@@ -20,7 +20,7 @@ let userSchema=new mongoose.Schema({
     playlist:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:'playlist'
+            ref:'list'
         }
     ]
 });

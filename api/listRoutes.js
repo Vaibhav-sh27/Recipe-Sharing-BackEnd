@@ -27,9 +27,9 @@ router.get('/playlist/:userId/playlists', async (req, res)=>{
 router.post('/playlist/:userId/add', async (req, res)=>{
     try {
         let {userId} = req.params;
-        let {name, access, owner, movies} = req.body;
+        let {name, access, owner, recipe} = req.body;
         let currUser = await user.findById(userId);
-        const playlistData = new playlist({name, access, owner, movies});
+        const playlistData = new playlist({name, access, owner, recipe});
         currUser.playlist.push(playlistData);
         await playlistData.save();
         await currUser.save();
@@ -49,13 +49,30 @@ router.patch('/playlist/:playlistId', async (req, res)=>{
         let playItem = req.body;
 
         let play=await playlist.findById(playlistId);
-        let isAdded= play.movies.filter(item=>playItem.imdbID==item.imdbID);
+        let isAdded= play.recipe.filter(item=>playItem.imdbID==item.imdbID);
         console.log(isAdded);
         if(isAdded.length!=0){
             res.status(400).json({msg: 'List Already Added'}); 
             return;
         }
-        play.movies.push(playItem);
+        play.recipe.push(playItem);
+        play.save();
+         
+        res.status(201).json({msg: 'list Updated'});
+    } catch (err) {
+        res.status(400).json({msg: "something went wrong", err: err})
+    }
+})
+
+// add recipie
+router.patch('/list/:playlistId', async (req, res)=>{
+    try {
+        let {playlistId} = req.params;
+        let playItem = req.body;
+
+        let play=await playlist.findById(playlistId);
+
+        play.recipe.push(playItem);
         play.save();
          
         res.status(201).json({msg: 'list Updated'});
@@ -96,7 +113,7 @@ router.delete('/movie/:playId/:movieId', async (req, res)=>{
     try {
         let {playId, movieId} = req.params;
         let currPlay = await playlist.findById(playId);
-        currPlay.movies= currPlay.movies.filter((item)=>item.imdbID!==movieId);
+        currPlay.recipe= currPlay.recipe.filter((item)=>item.imdbID!==movieId);
         console.log(currPlay);
         currPlay.save();
          
