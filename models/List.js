@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-let playlistSchema = new mongoose.Schema({
+let listSchema = new mongoose.Schema({
     name: {
         type: String,
         trim: true,
@@ -15,8 +15,8 @@ let playlistSchema = new mongoose.Schema({
         required: true,
         trim:true,
    },
-   movies: []
+   recipe: []
 })
 
-let PlayList = mongoose.model("playlist", playlistSchema);
-module.exports = PlayList;
+let List = mongoose.model("list", listSchema);
+module.exports = List;

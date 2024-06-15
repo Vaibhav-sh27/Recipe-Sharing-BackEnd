@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const playlist = require('../models/PlayList');
+const playlist = require('../models/List');
 const user = require('../models/Users');
 
 router.get('/playlist/all', async (req, res)=>{
@@ -52,13 +52,13 @@ router.patch('/playlist/:playlistId', async (req, res)=>{
         let isAdded= play.movies.filter(item=>playItem.imdbID==item.imdbID);
         console.log(isAdded);
         if(isAdded.length!=0){
-            res.status(400).json({msg: 'Movie Already Added'}); 
+            res.status(400).json({msg: 'List Already Added'}); 
             return;
         }
         play.movies.push(playItem);
         play.save();
          
-        res.status(201).json({msg: 'playlist Updated'});
+        res.status(201).json({msg: 'list Updated'});
     } catch (err) {
         res.status(400).json({msg: "something went wrong", err: err})
     }
@@ -71,7 +71,7 @@ router.patch('/playlist/edit/:id', async (req, res)=>{
         await playlist.findByIdAndUpdate(id, {name, access});
         let data = await playlist.findById(id);
         console.log(data);
-        res.status(201).json({msg: 'playlist Updated', data});
+        res.status(201).json({msg: 'list Updated', data});
     } catch (err) {
         res.status(400).json({msg: "something went wrong", err: err})
     }
@@ -86,7 +86,7 @@ router.delete('/playlist/:userId/:playlistId', async (req, res)=>{
         await playlist.findByIdAndDelete(playlistId);
 
          
-        res.status(201).json({msg: 'playlist Deleted', currUser});
+        res.status(201).json({msg: 'list Deleted', currUser});
     } catch (err) {
         res.status(400).json({msg: "something went wrong", err: err})
     }
@@ -100,7 +100,7 @@ router.delete('/movie/:playId/:movieId', async (req, res)=>{
         console.log(currPlay);
         currPlay.save();
          
-        res.status(201).json({msg: 'Movie Deleted'});
+        res.status(201).json({msg: 'Recipe Deleted'});
     } catch (err) {
         res.status(400).json({msg: "something went wrong", err: err})
     }
@@ -114,7 +114,7 @@ router.post('/playlist/:id', async (req, res)=>{
         let item = await playlist.findById(id);
         if(item.access==='Private'){
             if(currUser.email!==item.owner){
-                res.status(215).json({msg: "This PlayList is Private!!!"})
+                res.status(215).json({msg: "This List is Private!!!"})
                 return;
             }
         }
