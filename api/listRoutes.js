@@ -49,7 +49,7 @@ router.patch('/playlist/:playlistId', async (req, res)=>{
         let playItem = req.body;
 
         let play=await playlist.findById(playlistId);
-        let isAdded= play.recipe.filter(item=>playItem.imdbID==item.imdbID);
+        let isAdded= play.recipe.filter(item=>playItem.idMeal==item.idMeal);
         console.log(isAdded);
         if(isAdded.length!=0){
             res.status(400).json({msg: 'List Already Added'}); 
@@ -113,7 +113,7 @@ router.delete('/movie/:playId/:movieId', async (req, res)=>{
     try {
         let {playId, movieId} = req.params;
         let currPlay = await playlist.findById(playId);
-        currPlay.recipe= currPlay.recipe.filter((item)=>item.imdbID!==movieId);
+        currPlay.recipe= currPlay.recipe.filter((item)=>item.idMeal!==movieId);
         console.log(currPlay);
         currPlay.save();
          
